@@ -1,0 +1,4 @@
+# Windows ends lines with CRLF, almost everything else uses LF. Without this,
+# a file can look "entirely changed" to git just because of who saved it last.
+# This normalises every text file to LF inside the repository.
+* text=auto eol=lf

@@ -1,0 +1,15 @@
+# Windows clutter
+Thumbs.db
+desktop.ini
+*.lnk
+
+# macOS clutter, in case you ever open this on a Mac
+.DS_Store
+
+# Editor settings — yours, not the project's
+.vscode/
+.idea/
+
+# Scratch files
+*.bak
+*.tmp

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resale Profit Calculator — what you actually keep</title>
+  <meta name="description" content="Free calculator for resellers. Enter your costs, fees and sale price to see your real profit, margin and break-even price.">
+
+  <!-- This line pulls in our stylesheet. The browser reads style.css for all the looks. -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Resale Profit Calculator</h1>
+    <p class="tagline">Fees and postage eat more than people think. Here's what you actually keep.</p>
+  </header>
+
+  <main>
+
+    <!-- ===== THE FORM =====
+         Everything the user types lives in here.
+         Each input has a unique id="..." so JavaScript can find it. -->
+    <form id="calculator" class="calculator">
+
+      <div class="columns">
+
+        <!-- ---- Column 1: money going out ---- -->
+        <fieldset class="card">
+          <legend>What it costs you</legend>
+
+          <div class="field">
+            <label for="itemCost">Item cost</label>
+            <div class="input-wrap">
+              <span class="symbol" data-currency>€</span>
+              <input type="number" id="itemCost" value="10" min="0" step="0.01">
+            </div>
+            <p class="hint">What you paid for it.</p>
+          </div>
+
+          <div class="field">
+            <label for="extraCosts">Extra costs</label>
+            <div class="input-wrap">
+              <span class="symbol" data-currency>€</span>
+              <input type="number" id="extraCosts" value="0" min="0" step="0.01">
+            </div>
+            <p class="hint">Packaging, cleaning, spare parts, petrol.</p>
+          </div>
+
+          <div class="field">
+            <label for="shippingPaid">Postage you pay</label>
+            <div class="input-wrap">
+              <span class="symbol" data-currency>€</span>
+              <input type="number" id="shippingPaid" value="4" min="0" step="0.01">
+            </div>
+            <p class="hint">What the courier charges you.</p>
+          </div>
+        </fieldset>
+
+        <!-- ---- Column 2: money coming in ---- -->
+        <fieldset class="card">
+          <legend>What the buyer pays</legend>
+
+          <div class="field">
+            <label for="salePrice">Sale price</label>
+            <div class="input-wrap">
+              <span class="symbol" data-currency>€</span>
+              <input type="number" id="salePrice" value="30" min="0" step="0.01">
+            </div>
+            <p class="hint">The listing price.</p>
+          </div>
+
+          <div class="field">
+            <label for="shippingCharged">Postage you charge</label>
+            <div class="input-wrap">
+              <span class="symbol" data-currency>€</span>
+              <input type="number" id="shippingCharged" value="4" min="0" step="0.01">
+            </div>
+            <p class="hint">Set to 0 if postage is free for the buyer.</p>
+          </div>
+
+          <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency">
+              <option value="€" selected>€ Euro</option>
+              <option value="£">£ Pound</option>
+              <option value="$">$ Dollar</option>
+              <option value="zł">zł Złoty</option>
+            </select>
+            <p class="hint">Only changes the symbol shown.</p>
+          </div>
+        </fieldset>
+
+        <!-- ---- Column 3: the platform's cut ---- -->
+        <fieldset class="card">
+          <legend>Platform fees</legend>
+
+          <!-- Filled in by script.js only when the fee data has gone old.
+               Stays completely empty, and takes up no space, while it's fresh. -->
+          <p class="stale-warning" id="staleWarning"></p>
+
+          <!-- These buttons are NOT written out by hand. script.js builds them
+               from the list in fees.js. Add a platform there, not here. -->
+          <div class="presets" id="presetButtons"></div>
+          <p class="preset-note" id="presetNote"></p>
+
+          <div class="field">
+            <label for="feePercent">Fee percentage</label>
+            <div class="input-wrap">
+              <input type="number" id="feePercent" value="12.8" min="0" max="100" step="0.1">
+              <span class="symbol symbol-right">%</span>
+            </div>
+            <p class="hint">Charged on sale price <em>plus</em> postage on most platforms.</p>
+          </div>
+
+          <div class="field">
+            <label for="fixedFee">Fixed fee per order</label>
+            <div class="input-wrap">
+              <span class="symbol" data-currency>€</span>
+              <input type="number" id="fixedFee" value="0.30" min="0" step="0.01">
+            </div>
+            <p class="hint">A flat amount some platforms add on top.</p>
+          </div>
+        </fieldset>
+
+      </div>
+    </form>
+
+    <!-- ===== THE RESULTS =====
+         These start empty. JavaScript fills them in. -->
+    <section class="results card" id="results" aria-live="polite">
+
+      <div class="headline">
+        <p class="headline-label">You keep</p>
+        <p class="headline-number" id="profit">—</p>
+      </div>
+
+      <dl class="stats">
+        <div class="stat">
+          <dt>Profit margin</dt>
+          <dd id="margin">—</dd>
+        </div>
+        <div class="stat">
+          <dt>Return on spend</dt>
+          <dd id="roi">—</dd>
+        </div>
+        <div class="stat">
+          <dt>Break-even price</dt>
+          <dd id="breakEven">—</dd>
+        </div>
+      </dl>
+
+      <!-- A plain-language line that changes with the numbers -->
+      <p class="verdict" id="verdict"></p>
+
+      <!-- The full sum, written out, so the number is never a mystery -->
+      <details class="breakdown">
+        <summary>Show the full sum</summary>
+        <table>
+          <tbody id="breakdownRows"></tbody>
+        </table>
+      </details>
+
+    </section>
+
+    <!-- ===== WHERE SHOULD YOU SELL IT? =====
+         Same item, same costs, every platform at once.
+         The rows are built by renderComparison() in script.js. -->
+    <section class="compare card">
+      <h2>Where should you sell it?</h2>
+      <p class="compare-intro">
+        The same item and the same costs, run through every platform's fees.
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th scope="col">Platform</th>
+            <th scope="col">Fees</th>
+            <th scope="col">You keep</th>
+            <th scope="col">Margin</th>
+          </tr>
+        </thead>
+        <tbody id="compareRows"></tbody>
+      </table>
+
+      <p class="compare-caveat">
+        Money isn't the only thing that matters. A platform with no fees but no
+        buyers for what you're selling will leave the item sitting for months,
+        and an item sold slowly at a smaller margin can still beat one that
+        never sells. Treat this as one input, not the answer.
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p id="feeAge"></p>
+    <p>Rates differ by country, category and shop subscription — check your own platform
+       and edit the numbers if they differ. The presets are a starting point, not gospel.</p>
+    <p>Built by hand with HTML, CSS and JavaScript. No tracking, no accounts, nothing leaves your browser.</p>
+  </footer>
+
+  <!-- Order matters. fees.js defines FEE_DATA; script.js uses it. Load the
+       data first or script.js will run and find nothing there.
+
+       Why a .js file rather than a .json one: reading a .json file needs
+       fetch(), and browsers block fetch() on pages opened straight from disk
+       (a file:// address) for security reasons. A .js file loaded with a
+       <script> tag has no such problem, so the site keeps working by
+       double-clicking index.html — no server needed. -->
+  <script src="fees.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

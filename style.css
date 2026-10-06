@@ -1,0 +1,465 @@
+/* ==========================================================================
+   Resale Profit Calculator — stylesheet
+   Read top to bottom. Each section is labelled.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES
+   These are reusable values. Change one here and it updates everywhere.
+   Use them with var(--name).
+   -------------------------------------------------------------------------- */
+:root {
+  --bg:          #f6f5f2;   /* page background */
+  --surface:     #ffffff;   /* cards sit on top of the page */
+  --ink:         #1c1b19;   /* main text */
+  --ink-soft:    #6b6862;   /* hints, labels, quieter text */
+  --line:        #e2dfd8;   /* borders */
+  --accent:      #1a6b4a;   /* our green — profit, highlights */
+  --accent-soft: #e8f2ec;
+  --on-accent:   #ffffff;   /* text sitting ON the accent colour */
+  --loss:        #a93226;   /* red — when you lose money */
+  --loss-soft:   #fbeae8;
+  --warn:        #b07d1a;   /* amber — something needs attention */
+  --warn-soft:   #fbf3e2;
+
+  --radius: 10px;
+  --gap: 1.25rem;
+}
+
+/* Dark mode. The browser tells us the user's system preference and we
+   simply redefine the same variables. Nothing else in the file changes. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:          #16171a;
+    --surface:     #1f2125;
+    --ink:         #ececea;
+    --ink-soft:    #9b9a96;
+    --line:        #32353a;
+    --accent:      #4ec08c;
+    --accent-soft: #1d2f28;
+    --on-accent:   #16171a;   /* dark text, because the green is light here */
+    --loss:        #e0735f;
+    --loss-soft:   #37211e;
+    --warn:        #d6a441;
+    --warn-soft:   #342c1a;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   2. BASE
+   Sensible defaults for the whole page.
+   -------------------------------------------------------------------------- */
+
+/* border-box means padding no longer makes boxes wider than you asked for.
+   Almost every site sets this. */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 2rem 1.25rem 4rem;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One shared width limit so the header, main and footer line up. */
+.site-header, main, .site-footer {
+  max-width: 1040px;
+  margin-inline: auto;   /* centres the block horizontally */
+}
+
+
+/* --------------------------------------------------------------------------
+   3. HEADER
+   -------------------------------------------------------------------------- */
+.site-header { margin-bottom: 2rem; }
+
+.site-header h1 {
+  margin: 0 0 .35rem;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);  /* grows with the screen, within limits */
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--ink-soft);
+  max-width: 46ch;      /* ch = width of a "0". Keeps lines readable. */
+}
+
+
+/* --------------------------------------------------------------------------
+   4. CARDS — the white panels
+   -------------------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+/* fieldset and legend are form elements with odd default styling,
+   so we reset them and restyle. */
+fieldset.card { margin: 0; }
+
+legend {
+  padding: 0 .4rem;
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--ink-soft);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. LAYOUT — the three columns
+   CSS Grid. auto-fit + minmax means: fit as many columns as will hold
+   280px, otherwise stack. That is the whole mobile layout, in one line.
+   -------------------------------------------------------------------------- */
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--gap);
+}
+
+
+/* --------------------------------------------------------------------------
+   6. FORM FIELDS
+   -------------------------------------------------------------------------- */
+.field { margin-bottom: 1.1rem; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: .92rem;
+  margin-bottom: .35rem;
+}
+
+/* The wrap lets us put a € or % symbol inside the box alongside the input. */
+.input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* :focus-within styles the whole wrap when anything inside it is focused. */
+.input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.symbol {
+  padding: 0 .3rem 0 .7rem;
+  color: var(--ink-soft);
+  font-size: .95rem;
+  user-select: none;
+}
+.symbol-right { padding: 0 .7rem 0 .3rem; }
+
+input[type="number"] {
+  flex: 1;                 /* take up all remaining space */
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: .6rem .5rem;
+  outline: none;
+}
+
+select {
+  width: 100%;
+  padding: .6rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+}
+
+.hint {
+  margin: .3rem 0 0;
+  font-size: .8rem;
+  color: var(--ink-soft);
+}
+
+
+/* --------------------------------------------------------------------------
+   6b. PLATFORM PRESET BUTTONS
+   -------------------------------------------------------------------------- */
+.presets {
+  display: flex;
+  flex-wrap: wrap;     /* buttons drop to the next line instead of overflowing */
+  gap: .4rem;
+  margin-bottom: .6rem;
+}
+
+.preset {
+  padding: .35rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;   /* anything huge gives a perfect pill shape */
+  background: var(--bg);
+  color: var(--ink-soft);
+  font: inherit;          /* buttons ignore the page font unless told */
+  font-size: .85rem;
+  cursor: pointer;
+  transition: border-color .12s, color .12s, background .12s;
+}
+
+.preset:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.preset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* JavaScript adds .is-active to whichever preset was clicked. */
+.preset.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+
+/* The age warning. Empty by default, so it must take up no room at all
+   until JavaScript puts something in it. */
+.stale-warning { margin: 0; }
+.stale-warning:empty { display: none; }
+
+.stale-warning.is-warn,
+.stale-warning.is-bad {
+  display: block;
+  margin: 0 0 .7rem;
+  padding: .55rem .7rem;
+  border-radius: 8px;
+  font-size: .8rem;
+  line-height: 1.45;
+  border: 1px solid;
+}
+
+.stale-warning.is-warn {
+  background: var(--warn-soft);
+  border-color: var(--warn);
+  color: var(--ink);
+}
+
+.stale-warning.is-bad {
+  background: var(--loss-soft);
+  border-color: var(--loss);
+  color: var(--ink);
+}
+
+.preset-note {
+  margin: 0 0 1rem;
+  font-size: .8rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+/* When empty, the note should take up no space at all. */
+.preset-note:empty { margin: 0; }
+
+
+/* --------------------------------------------------------------------------
+   7. RESULTS PANEL
+   -------------------------------------------------------------------------- */
+.results { margin-top: var(--gap); }
+
+.headline-label {
+  margin: 0;
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--ink-soft);
+}
+
+.headline-number {
+  margin: .1rem 0 0;
+  font-size: clamp(2.2rem, 7vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;  /* digits line up as values change */
+}
+
+/* JavaScript adds this class when profit is below zero. */
+.headline-number.is-loss { color: var(--loss); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.stat dt {
+  font-size: .8rem;
+  color: var(--ink-soft);
+  margin-bottom: .15rem;
+}
+.stat dd {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.verdict {
+  margin: 1.25rem 0 0;
+  padding: .75rem .9rem;
+  background: var(--accent-soft);
+  border-radius: 8px;
+  font-size: .92rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. THE BREAKDOWN TABLE (inside the collapsible <details>)
+   -------------------------------------------------------------------------- */
+.breakdown { margin-top: 1.25rem; }
+
+.breakdown summary {
+  cursor: pointer;
+  font-size: .88rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.breakdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: .85rem;
+  font-size: .92rem;
+}
+
+.breakdown td {
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+/* The second cell in every row: the number. Right-aligned. */
+.breakdown td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdown tr.total td {
+  font-weight: 700;
+  border-bottom: none;
+  border-top: 2px solid var(--line);
+  padding-top: .6rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   8b. THE COMPARISON TABLE
+   -------------------------------------------------------------------------- */
+.compare { margin-top: var(--gap); }
+
+.compare h2 {
+  margin: 0 0 .2rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.compare-intro {
+  margin: 0 0 1rem;
+  font-size: .88rem;
+  color: var(--ink-soft);
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .95rem;
+}
+
+.compare-table th {
+  text-align: left;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  padding: 0 .6rem .5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Numbers read better right-aligned; the first column is a name, so skip it. */
+.compare-table th:not(:first-child),
+.compare-table td:not(:first-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.compare-table td {
+  padding: .6rem .6rem .6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.compare-table td:last-child,
+.compare-table th:last-child { padding-right: 0; }
+
+.compare-table tr:last-child td { border-bottom: none; }
+
+/* The winning row (or rows — ties are possible and honest). */
+.compare-table tr.is-best td {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.badge {
+  display: inline-block;
+  margin-left: .4rem;
+  padding: .08rem .4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: .68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  vertical-align: .08em;
+}
+
+.compare-caveat {
+  margin: 1.1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+
+/* --------------------------------------------------------------------------
+   9. FOOTER
+   -------------------------------------------------------------------------- */
+.site-footer {
+  margin-top: 2.5rem;
+  font-size: .82rem;
+  color: var(--ink-soft);
+}
+
+/* The width limit goes on the paragraphs, not the footer itself — the footer
+   shares the centring rule near the top of this file, so limiting its width
+   would pull the whole block into the middle of the page. */
+.site-footer p {
+  margin: 0 0 .6rem;
+  max-width: 70ch;
+}
