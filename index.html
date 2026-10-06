@@ -6,7 +6,7 @@
   <title>Resale Profit Calculator — what you actually keep</title>
   <meta name="description" content="Free calculator for resellers. Enter your costs, fees and sale price to see your real profit, margin and break-even price.">
 
-  <!-- This line pulls in our stylesheet. The browser reads style.css for all the looks. -->
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -19,14 +19,12 @@
 
   <main>
 
-    <!-- ===== THE FORM =====
-         Everything the user types lives in here.
-         Each input has a unique id="..." so JavaScript can find it. -->
+ 
     <form id="calculator" class="calculator">
 
       <div class="columns">
 
-        <!-- ---- Column 1: money going out ---- -->
+      
         <fieldset class="card">
           <legend>What it costs you</legend>
 
@@ -58,7 +56,7 @@
           </div>
         </fieldset>
 
-        <!-- ---- Column 2: money coming in ---- -->
+       
         <fieldset class="card">
           <legend>What the buyer pays</legend>
 
@@ -92,16 +90,14 @@
           </div>
         </fieldset>
 
-        <!-- ---- Column 3: the platform's cut ---- -->
+        
         <fieldset class="card">
           <legend>Platform fees</legend>
 
-          <!-- Filled in by script.js only when the fee data has gone old.
-               Stays completely empty, and takes up no space, while it's fresh. -->
+       
           <p class="stale-warning" id="staleWarning"></p>
 
-          <!-- These buttons are NOT written out by hand. script.js builds them
-               from the list in fees.js. Add a platform there, not here. -->
+       
           <div class="presets" id="presetButtons"></div>
           <p class="preset-note" id="presetNote"></p>
 
@@ -127,8 +123,7 @@
       </div>
     </form>
 
-    <!-- ===== THE RESULTS =====
-         These start empty. JavaScript fills them in. -->
+
     <section class="results card" id="results" aria-live="polite">
 
       <div class="headline">
@@ -151,10 +146,8 @@
         </div>
       </dl>
 
-      <!-- A plain-language line that changes with the numbers -->
       <p class="verdict" id="verdict"></p>
 
-      <!-- The full sum, written out, so the number is never a mystery -->
       <details class="breakdown">
         <summary>Show the full sum</summary>
         <table>
@@ -164,9 +157,6 @@
 
     </section>
 
-    <!-- ===== WHERE SHOULD YOU SELL IT? =====
-         Same item, same costs, every platform at once.
-         The rows are built by renderComparison() in script.js. -->
     <section class="compare card">
       <h2>Where should you sell it?</h2>
       <p class="compare-intro">
@@ -202,14 +192,7 @@
     <p>Built by hand with HTML, CSS and JavaScript. No tracking, no accounts, nothing leaves your browser.</p>
   </footer>
 
-  <!-- Order matters. fees.js defines FEE_DATA; script.js uses it. Load the
-       data first or script.js will run and find nothing there.
-
-       Why a .js file rather than a .json one: reading a .json file needs
-       fetch(), and browsers block fetch() on pages opened straight from disk
-       (a file:// address) for security reasons. A .js file loaded with a
-       <script> tag has no such problem, so the site keeps working by
-       double-clicking index.html — no server needed. -->
+  
   <script src="fees.js"></script>
   <script src="script.js"></script>
 </body>

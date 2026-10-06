@@ -1,17 +1,4 @@
-/* ==========================================================================
-   fees.js — the platform fee data, and nothing else.
 
-   This file is DATA. No logic lives here, and no fee numbers live anywhere
-   else. When a platform changes its rates, this is the only file you touch,
-   and you can edit it without being able to read a line of JavaScript.
-
-   WHEN YOU UPDATE A FEE: change the number, AND change lastChecked to
-   today's date. The site reads that date and tells visitors how old these
-   numbers are. A stale figure that claims to be current is worse than no
-   figure at all.
-
-   Date format is YYYY-MM-DD. Always.
-   ========================================================================== */
 
 const FEE_DATA = {
 

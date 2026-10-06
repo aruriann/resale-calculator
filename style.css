@@ -1,14 +1,4 @@
-/* ==========================================================================
-   Resale Profit Calculator — stylesheet
-   Read top to bottom. Each section is labelled.
-   ========================================================================== */
 
-
-/* --------------------------------------------------------------------------
-   1. VARIABLES
-   These are reusable values. Change one here and it updates everywhere.
-   Use them with var(--name).
-   -------------------------------------------------------------------------- */
 :root {
   --bg:          #f6f5f2;   /* page background */
   --surface:     #ffffff;   /* cards sit on top of the page */
@@ -27,8 +17,6 @@
   --gap: 1.25rem;
 }
 
-/* Dark mode. The browser tells us the user's system preference and we
-   simply redefine the same variables. Nothing else in the file changes. */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg:          #16171a;
@@ -47,13 +35,8 @@
 }
 
 
-/* --------------------------------------------------------------------------
-   2. BASE
-   Sensible defaults for the whole page.
-   -------------------------------------------------------------------------- */
 
-/* border-box means padding no longer makes boxes wider than you asked for.
-   Almost every site sets this. */
+
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -66,34 +49,30 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* One shared width limit so the header, main and footer line up. */
+
 .site-header, main, .site-footer {
   max-width: 1040px;
-  margin-inline: auto;   /* centres the block horizontally */
+  margin-inline: auto;   
 }
 
 
-/* --------------------------------------------------------------------------
-   3. HEADER
-   -------------------------------------------------------------------------- */
+
 .site-header { margin-bottom: 2rem; }
 
 .site-header h1 {
   margin: 0 0 .35rem;
-  font-size: clamp(1.6rem, 4vw, 2.3rem);  /* grows with the screen, within limits */
+  font-size: clamp(1.6rem, 4vw, 2.3rem); 
   letter-spacing: -0.02em;
 }
 
 .tagline {
   margin: 0;
   color: var(--ink-soft);
-  max-width: 46ch;      /* ch = width of a "0". Keeps lines readable. */
+  max-width: 46ch;      
 }
 
 
-/* --------------------------------------------------------------------------
-   4. CARDS — the white panels
-   -------------------------------------------------------------------------- */
+
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -101,8 +80,6 @@ body {
   padding: 1.25rem;
 }
 
-/* fieldset and legend are form elements with odd default styling,
-   so we reset them and restyle. */
 fieldset.card { margin: 0; }
 
 legend {
@@ -115,11 +92,7 @@ legend {
 }
 
 
-/* --------------------------------------------------------------------------
-   5. LAYOUT — the three columns
-   CSS Grid. auto-fit + minmax means: fit as many columns as will hold
-   280px, otherwise stack. That is the whole mobile layout, in one line.
-   -------------------------------------------------------------------------- */
+
 .columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -127,9 +100,7 @@ legend {
 }
 
 
-/* --------------------------------------------------------------------------
-   6. FORM FIELDS
-   -------------------------------------------------------------------------- */
+
 .field { margin-bottom: 1.1rem; }
 .field:last-child { margin-bottom: 0; }
 
@@ -140,7 +111,7 @@ label {
   margin-bottom: .35rem;
 }
 
-/* The wrap lets us put a € or % symbol inside the box alongside the input. */
+
 .input-wrap {
   display: flex;
   align-items: center;
@@ -150,7 +121,7 @@ label {
   overflow: hidden;
 }
 
-/* :focus-within styles the whole wrap when anything inside it is focused. */
+
 .input-wrap:focus-within {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
@@ -165,7 +136,7 @@ label {
 .symbol-right { padding: 0 .7rem 0 .3rem; }
 
 input[type="number"] {
-  flex: 1;                 /* take up all remaining space */
+  flex: 1;                 
   width: 100%;
   min-width: 0;
   border: none;
@@ -193,12 +164,10 @@ select {
 }
 
 
-/* --------------------------------------------------------------------------
-   6b. PLATFORM PRESET BUTTONS
-   -------------------------------------------------------------------------- */
+
 .presets {
   display: flex;
-  flex-wrap: wrap;     /* buttons drop to the next line instead of overflowing */
+  flex-wrap: wrap;     
   gap: .4rem;
   margin-bottom: .6rem;
 }
@@ -206,10 +175,10 @@ select {
 .preset {
   padding: .35rem .75rem;
   border: 1px solid var(--line);
-  border-radius: 999px;   /* anything huge gives a perfect pill shape */
+  border-radius: 999px;   
   background: var(--bg);
   color: var(--ink-soft);
-  font: inherit;          /* buttons ignore the page font unless told */
+  font: inherit;          
   font-size: .85rem;
   cursor: pointer;
   transition: border-color .12s, color .12s, background .12s;
@@ -225,7 +194,7 @@ select {
   outline-offset: 2px;
 }
 
-/* JavaScript adds .is-active to whichever preset was clicked. */
+
 .preset.is-active {
   background: var(--accent);
   border-color: var(--accent);
@@ -233,8 +202,7 @@ select {
   font-weight: 600;
 }
 
-/* The age warning. Empty by default, so it must take up no room at all
-   until JavaScript puts something in it. */
+
 .stale-warning { margin: 0; }
 .stale-warning:empty { display: none; }
 
@@ -267,13 +235,11 @@ select {
   line-height: 1.45;
   color: var(--ink-soft);
 }
-/* When empty, the note should take up no space at all. */
+
 .preset-note:empty { margin: 0; }
 
 
-/* --------------------------------------------------------------------------
-   7. RESULTS PANEL
-   -------------------------------------------------------------------------- */
+
 .results { margin-top: var(--gap); }
 
 .headline-label {
@@ -292,10 +258,10 @@ select {
   letter-spacing: -0.03em;
   line-height: 1.05;
   color: var(--accent);
-  font-variant-numeric: tabular-nums;  /* digits line up as values change */
+  font-variant-numeric: tabular-nums;  
 }
 
-/* JavaScript adds this class when profit is below zero. */
+
 .headline-number.is-loss { color: var(--loss); }
 
 .stats {
@@ -328,9 +294,7 @@ select {
 }
 
 
-/* --------------------------------------------------------------------------
-   8. THE BREAKDOWN TABLE (inside the collapsible <details>)
-   -------------------------------------------------------------------------- */
+
 .breakdown { margin-top: 1.25rem; }
 
 .breakdown summary {
@@ -352,7 +316,7 @@ select {
   border-bottom: 1px solid var(--line);
 }
 
-/* The second cell in every row: the number. Right-aligned. */
+
 .breakdown td:last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -366,9 +330,7 @@ select {
 }
 
 
-/* --------------------------------------------------------------------------
-   8b. THE COMPARISON TABLE
-   -------------------------------------------------------------------------- */
+
 .compare { margin-top: var(--gap); }
 
 .compare h2 {
@@ -400,7 +362,7 @@ select {
   border-bottom: 1px solid var(--line);
 }
 
-/* Numbers read better right-aligned; the first column is a name, so skip it. */
+
 .compare-table th:not(:first-child),
 .compare-table td:not(:first-child) {
   text-align: right;
@@ -417,7 +379,7 @@ select {
 
 .compare-table tr:last-child td { border-bottom: none; }
 
-/* The winning row (or rows — ties are possible and honest). */
+
 .compare-table tr.is-best td {
   font-weight: 700;
   color: var(--accent);
@@ -447,18 +409,14 @@ select {
 }
 
 
-/* --------------------------------------------------------------------------
-   9. FOOTER
-   -------------------------------------------------------------------------- */
+
 .site-footer {
   margin-top: 2.5rem;
   font-size: .82rem;
   color: var(--ink-soft);
 }
 
-/* The width limit goes on the paragraphs, not the footer itself — the footer
-   shares the centring rule near the top of this file, so limiting its width
-   would pull the whole block into the middle of the page. */
+
 .site-footer p {
   margin: 0 0 .6rem;
   max-width: 70ch;
